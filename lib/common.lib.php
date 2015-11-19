@@ -1454,7 +1454,7 @@ function sql_set_charset($charset, $link=null)
     if(function_exists('mysqli_set_charset') && G5_MYSQLI_USE)
         mysqli_set_charset($link, $charset);
     else
-        sql_query(" set names {$charset} ");
+        mysql_query(" set names {$charset} ", $link);
 }
 
 
@@ -2927,6 +2927,17 @@ function get_safe_filename($name)
     $name = preg_replace($pattern, '', $name);
 
     return $name;
+}
+
+// 파일명 치환
+function replace_filename($name)
+{
+    @session_start();
+    $ss_id = session_id();
+    $usec = get_microtime();
+    $ext = array_pop(explode('.', $name));
+
+    return sha1($ss_id.$_SERVER['REMOTE_ADDR'].$usec).'.'.$ext;
 }
 
 // 아이코드 사용자정보
